@@ -46,7 +46,7 @@ test('base64', function(t) {
     });
 
     badVectors.forEach(function (vec, i) {
-        t.throws(function() { util.decodeBase64(vec) }, "base64 bad decode: " + i);
+        t.throws(function() { util.decodeBase64(vec, true) }, "base64 bad decode: " + i);
     });
 
     t.end();

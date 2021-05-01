@@ -15,7 +15,7 @@
 
   function validateBase64(s) {
     if (!(/^(?:[A-Za-z0-9+\/]{2}[A-Za-z0-9+\/]{2})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/.test(s))) {
-      throw new TypeError('invalid encoding');
+      throw new TypeError('invalid base64 encoded string');
     }
   }
 
@@ -41,9 +41,19 @@
           return Buffer.from(arr).toString('base64');
       };
 
-      util.decodeBase64 = function (s) {
-        validateBase64(s);
-        return new Uint8Array(Array.prototype.slice.call(Buffer.from(s, 'base64'), 0));
+      util.decodeBase64 = function (s, validate) {
+        var inValidate = validate !== undefined && validate !== null && validate ? validate : false
+        if (inValidate) {
+          validateBase64(s);
+        }
+        try {
+          return new Uint8Array(Array.prototype.slice.call(Buffer.from(s, 'base64'), 0));
+        } catch (error) {
+          if (!inValidate) {
+            validateBase64(s);
+          }
+          throw error;
+        }
       };
 
     } else {
@@ -52,9 +62,19 @@
         return (new Buffer(arr)).toString('base64');
       };
 
-      util.decodeBase64 = function(s) {
-        validateBase64(s);
-        return new Uint8Array(Array.prototype.slice.call(new Buffer(s, 'base64'), 0));
+      util.decodeBase64 = function(s, validate) {
+        var inValidate = validate !== undefined && validate !== null && validate ? validate : false
+        if (inValidate) {
+          validateBase64(s);
+        }
+        try {
+          return new Uint8Array(Array.prototype.slice.call(new Buffer(s, 'base64'), 0));
+        } catch (error) {
+          if (!inValidate) {
+            validateBase64(s);
+          }
+          throw error;
+        }
       };
     }
 
@@ -67,11 +87,21 @@
       return btoa(s.join(''));
     };
 
-    util.decodeBase64 = function(s) {
-      validateBase64(s);
-      var i, d = atob(s), b = new Uint8Array(d.length);
-      for (i = 0; i < d.length; i++) b[i] = d.charCodeAt(i);
-      return b;
+    util.decodeBase64 = function(s, validate) {
+      var inValidate = validate !== undefined && validate !== null && validate ? validate : false
+      if (inValidate) {
+        validateBase64(s);
+      }
+      try {
+        var i, d = atob(s), b = new Uint8Array(d.length);
+        for (i = 0; i < d.length; i++) b[i] = d.charCodeAt(i);
+        return b;
+      } catch (error) {
+        if (!inValidate) {
+          validateBase64(s);
+        }
+        throw error;
+      }
     };
 
   }
