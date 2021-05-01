@@ -41,15 +41,16 @@
           return Buffer.from(arr).toString('base64');
       };
 
-      util.decodeBase64 = function (s, validate) {
-        var inValidate = validate !== undefined && validate !== null && validate ? validate : false
-        if (inValidate) {
+      util.decodeBase64 = function (s, v) {
+        if (typeof s !== 'string') throw new TypeError('expected string');
+        var inV = v !== undefined && v !== null && v ? v : false
+        if (inV) {
           validateBase64(s);
         }
         try {
           return new Uint8Array(Array.prototype.slice.call(Buffer.from(s, 'base64'), 0));
         } catch (error) {
-          if (!inValidate) {
+          if (!inV) {
             validateBase64(s);
           }
           throw error;
@@ -62,15 +63,16 @@
         return (new Buffer(arr)).toString('base64');
       };
 
-      util.decodeBase64 = function(s, validate) {
-        var inValidate = validate !== undefined && validate !== null && validate ? validate : false
-        if (inValidate) {
+      util.decodeBase64 = function(s, v) {
+        if (typeof s !== 'string') throw new TypeError('expected string');
+        var inV = v !== undefined && v !== null && v ? v : false
+        if (inV) {
           validateBase64(s);
         }
         try {
           return new Uint8Array(Array.prototype.slice.call(new Buffer(s, 'base64'), 0));
         } catch (error) {
-          if (!inValidate) {
+          if (!inV) {
             validateBase64(s);
           }
           throw error;
@@ -87,9 +89,10 @@
       return btoa(s.join(''));
     };
 
-    util.decodeBase64 = function(s, validate) {
-      var inValidate = validate !== undefined && validate !== null && validate ? validate : false
-      if (inValidate) {
+    util.decodeBase64 = function(s, v) {
+      if (typeof s !== 'string') throw new TypeError('expected string');
+      var inV = v !== undefined && v !== null && v ? v : false
+      if (inV) {
         validateBase64(s);
       }
       try {
@@ -97,7 +100,7 @@
         for (i = 0; i < d.length; i++) b[i] = d.charCodeAt(i);
         return b;
       } catch (error) {
-        if (!inValidate) {
+        if (!inV) {
           validateBase64(s);
         }
         throw error;
